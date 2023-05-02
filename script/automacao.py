@@ -52,7 +52,8 @@ consultaNotaPos = "consultaNota.png"
 captchaBoxPos = "checkBoxCaptcha.png" 
 imprimirPos = "imprimir.png" 
 botaoSalvarPos = "botaoSalvar.png" 
-pintarPos = "pintar.png" 
+pintarPos = "pintar.png"
+captchaError = "captchaError.png"
 
 def macroCompleto():
     
@@ -88,6 +89,13 @@ def macroCompleto():
     imgCaptcha()
     pyautogui.sleep(pauseTime)
 
+    errorOnCaptcha = pyautogui.locateOnScreen(captchaError, confidence= 0.7)
+    if errorOnCaptcha:
+        print(f"Erro no Captcha")
+        moveToImage(captchaError)
+        pyautogui.hotkey("ctrl", "w")
+        return
+
     if imgOnScreen(imprimirPos):
         moveToImage(imprimirPos)
         pyautogui.sleep(pauseTime)
@@ -97,6 +105,7 @@ def macroCompleto():
 
     if imgOnScreen(botaoSalvarPos):
         moveToImage(botaoSalvarPos)
+        pyautogui.sleep(1)
         pyautogui.press('enter')
         pyautogui.sleep(pauseTime)
         pyautogui.hotkey("ctrl", "w")
