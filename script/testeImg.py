@@ -13,19 +13,4 @@ def moveToImage(img, addLeft=0, addTop=0):
         print("Imagem Nao Econtrada")
 
 # pyautogui.sleep(3)
-# moveToImage("cabecalhoExcel.png", 0, 0)
-
-def imgCaptcha():
-    disponivel = True
-
-    while disponivel:
-        res = pyautogui.locateOnScreen("Pular.png")
-        if res:
-            pyautogui.click(res, clicks=2)
-            # print("imgCaptcha Econtrado")
-        else:
-            # print("imgCaptcha Nao Econtrado")
-            disponivel = False
-            return False
-        
-imgCaptcha()
+moveToImage("cabecalhoExcel2.png", 0, 0)

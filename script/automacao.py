@@ -46,13 +46,15 @@ pauseTime = 3
 pyautogui.PAUSE = .5
 continuar = True
 
-cabecalhoExcel = "cabecalhoExcel.png" 
+# cabecalhoExcel = "cabecalhoExcel.png" 
+cabecalhoExcel = "cabecalhoExcel2.png" 
 chaveCampoPos = "digiteAChave.png" 
 consultaNotaPos = "consultaNota.png" 
 captchaBoxPos = "checkBoxCaptcha.png" 
 imprimirPos = "imprimir.png" 
 botaoSalvarPos = "botaoSalvar.png" 
-pintarPos = "pintar.png"
+# pintarPos = "pintar.png"
+pintarPos = "pintar2.png"
 captchaError = "captchaError.png"
 
 def macroCompleto():
