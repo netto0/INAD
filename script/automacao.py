@@ -9,25 +9,33 @@ def getCursorPos():
 
 def imgCaptcha():
     disponivel = True
-
     while disponivel:
         res = pyautogui.locateOnScreen("Pular.png")
         if res:
             pyautogui.click(res, clicks=2)
-            print("imgCaptcha Econtrado")
+            # print("imgCaptcha Econtrado")
         else:
-            # print("imgCaptcha Nao Econtrado")
             disponivel = False
             return False
-        
-def imgOnScreen(img):
+
+def passCaptcha():
+    imgCaptcha()
+    pyautogui.sleep(4)
+    if imgOnScreen("checkBoxCaptcha.png", False):
+        print("erro, espere 2min")
+        return False
+    else:
+        return True
+
+
+def imgOnScreen(img, sair = True):
     res = pyautogui.locateOnScreen(img, confidence= 0.7)
     if res:
-        # print(f"Imagem '{img}' Econtrada")
         return True
     else:
-        print(f"Imagem '{img}' Nao Econtrada")
-        quit()
+        if sair:
+            print(f"Imagem '{img}' Nao Econtrada")
+            quit()
         return False
     
 def moveToImage(img, addLeft=0, addTop=0):
@@ -46,53 +54,42 @@ pauseTime = 3
 pyautogui.PAUSE = .5
 continuar = True
 
-# cabecalhoExcel = "cabecalhoExcel.png" 
-cabecalhoExcel = "cabecalhoExcel2.png" 
+cabecalhoExcel = "cabecalhoExcel.png" 
 chaveCampoPos = "digiteAChave.png" 
 consultaNotaPos = "consultaNota.png" 
 captchaBoxPos = "checkBoxCaptcha.png" 
 imprimirPos = "imprimir.png" 
 botaoSalvarPos = "botaoSalvar.png" 
-# pintarPos = "pintar.png"
-pintarPos = "pintar2.png"
+pintarPos = "pintar.png"
 captchaError = "captchaError.png"
+imageCaptchaFound = 0
 
 def macroCompleto():
-    
+    esperar = False
     if imgOnScreen(cabecalhoExcel):
         moveToImage(cabecalhoExcel)
         pyautogui.hotkey("ctrl", "c")
-    else:
-        continuar = False
-        return
 
     if imgOnScreen(chaveCampoPos):
         moveToImage(chaveCampoPos, 30, 30)
         pyautogui.hotkey("ctrl", "a")
         pyautogui.hotkey("ctrl", "v")
-    else:
-        continuar = False
-        return
     
     if imgOnScreen(consultaNotaPos):
         moveToImage(consultaNotaPos)
         pyautogui.sleep(pauseTime)
-    else:
-        continuar = False
-        return
 
     if imgOnScreen(captchaBoxPos):
         moveToImage(captchaBoxPos, -40)
         pyautogui.sleep(pauseTime)
-    else:
-        continuar = False
-        return
     
-    imgCaptcha()
+    if passCaptcha():
+        esperar = False
+    else:
+        esperar = True
     pyautogui.sleep(pauseTime)
 
-    errorOnCaptcha = pyautogui.locateOnScreen(captchaError, confidence= 0.7)
-    if errorOnCaptcha:
+    if imgOnScreen(captchaError,sair=False):
         print(f"Erro no Captcha")
         moveToImage(captchaError)
         pyautogui.hotkey("ctrl", "w")
@@ -101,33 +98,31 @@ def macroCompleto():
     if imgOnScreen(imprimirPos):
         moveToImage(imprimirPos)
         pyautogui.sleep(pauseTime)
-    else:
-        continuar = False
-        return
 
-    if imgOnScreen(botaoSalvarPos):
-        moveToImage(botaoSalvarPos)
-        pyautogui.sleep(1)
-        pyautogui.press('enter')
-        pyautogui.sleep(pauseTime)
+    
+    if imgOnScreen("ErrorMsg.png", sair=False):
         pyautogui.hotkey("ctrl", "w")
-    else:
-        continuar = False
-        return
-
-    if imgOnScreen(cabecalhoExcel):
         moveToImage(cabecalhoExcel)
-        moveToImage(pintarPos)
-        pyautogui.press('down')
     else:
-        continuar = False
-        return
+        if imgOnScreen(botaoSalvarPos):
+            moveToImage(botaoSalvarPos)
+            pyautogui.sleep(1)
+            pyautogui.press('enter')
+            pyautogui.sleep(pauseTime)
+            pyautogui.hotkey("ctrl", "w")
 
+        if imgOnScreen(cabecalhoExcel):
+            moveToImage(cabecalhoExcel)
+            moveToImage(pintarPos)
+            pyautogui.press('down')
+
+    if esperar:
+        print("Esperando 2 Minutos")
+        pyautogui.sleep(120)
 
 def executarEmLoop(quantidade):
     for d in range(quantidade):
         print(f"Execucao: {d+1}")
         macroCompleto()
-    print(f"Finalizado! {contadorCaptcha} captchas de imagem enfrentados.")
 
-executarEmLoop(100)
+executarEmLoop(50)
